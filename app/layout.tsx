@@ -11,7 +11,7 @@ const IBMPlex = IBM_Plex_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Artista - The best art gallery in the world!",
+  title: "magecraft - The best art gallery in the world!",
   description: "Create and share your art with the world 🎨!",
 };
 
