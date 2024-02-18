@@ -20,7 +20,7 @@ export async function addImage({ image, path, userId }: AddImageParams) {
   try {
     await connectToDatabase();
 
-    const author = await User.findOne({ clerkId: userId });
+    const author = await User.findById(userId);
 
     if (!author) throw new Error("User not found");
 
@@ -81,6 +81,32 @@ export async function getImage(imageId: string) {
     if (!image) throw new Error("Image not found");
 
     return JSON.parse(JSON.stringify(image));
+  } catch (error) {
+    handleError(error);
+  }
+}
+
+// GET IMAGES
+export async function getAllImages({
+  page,
+  limit = 9,
+  searchQuery,
+}: {
+  limit?: number;
+  page: number;
+  searchQuery?: string;
+}) {
+  try {
+    await connectToDatabase();
+
+    const images = await populateUser(
+      Image.find({})
+        .sort({ createdAt: -1 })
+        .skip((page - 1) * limit)
+        .limit(limit)
+    );
+
+    return JSON.parse(JSON.stringify(images));
   } catch (error) {
     handleError(error);
   }
