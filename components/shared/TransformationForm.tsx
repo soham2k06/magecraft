@@ -112,8 +112,9 @@ function TransformationForm({
     }, 1000);
   }
 
-  function onTransformHandler() {
+  const onTransformHandler = async () => {
     setIsTransforming(true);
+
     setTransformationConfig(
       deepMergeObjects(newTransformation, transformationConfig)
     );
@@ -123,9 +124,11 @@ function TransformationForm({
     startTransition(async () => {
       await updateCredits(userId, creditFee);
     });
-  }
+  };
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsSubmitting(true);
+
     if (data || image) {
       const transformationUrl = getCldImageUrl({
         width: image?.width,

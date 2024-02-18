@@ -13,6 +13,7 @@ function TransformedImage({
   hasDownload = false,
 }: TransformedImageProps) {
   function handleDownload() {}
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex-between">
@@ -38,25 +39,28 @@ function TransformedImage({
             height={getImageSize(type, image, "height")}
             src={image?.publicId}
             alt={image.title}
-            sizes="(max-width: 767px) 100vw, 50vw"
+            sizes={"(max-width: 767px) 100vw, 50vw"}
             placeholder={dataUrl as PlaceholderValue}
-            className="media-uploader_cldImage"
-            onLoad={() => {}}
-            onError={() => {
-              debounce(() => {
-                setIsTransforming && setIsTransforming(false);
-              }, 8000);
-            }}
+            className="transformed-image"
+            onLoad={() => setIsTransforming && setIsTransforming(false)}
+            onError={() =>
+              debounce(
+                () => setIsTransforming && setIsTransforming(false),
+                8000
+              )()
+            }
             {...transformationConfig}
           />
+
           {isTransforming && (
             <div className="transforming-loader">
               <Image
-                src="/assets/icons/spinners.svg"
+                src="/assets/icons/spinner.svg"
                 width={50}
                 height={50}
-                alt="Tranforming"
+                alt="spinner"
               />
+              <p className="text-white/80">Good things take time</p>
             </div>
           )}
         </div>
