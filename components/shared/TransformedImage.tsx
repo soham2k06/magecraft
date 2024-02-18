@@ -1,7 +1,15 @@
-import { dataUrl, debounce, getImageSize } from "@/lib/utils";
-import { CldImage } from "next-cloudinary";
+"use client";
+
+import { dataUrl, debounce, download, getImageSize } from "@/lib/utils";
+import { CldImage, getCldImageUrl } from "next-cloudinary";
 import { PlaceholderValue } from "next/dist/shared/lib/get-img-props";
 import Image from "next/image";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../ui/tooltip";
 
 function TransformedImage({
   image,
@@ -12,7 +20,18 @@ function TransformedImage({
   setIsTransforming,
   hasDownload = false,
 }: TransformedImageProps) {
-  function handleDownload() {}
+  function handleDownload(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    e.preventDefault();
+    download(
+      getCldImageUrl({
+        width: image?.width,
+        height: image?.height,
+        src: image?.publicId,
+        ...transformationConfig,
+      }),
+      title
+    );
+  }
 
   return (
     <div className="flex flex-col gap-4">
@@ -20,15 +39,24 @@ function TransformedImage({
         <h3 className="h3-bold text-dark-600">Tranformed</h3>
 
         {hasDownload && (
-          <button className="download-btn" onClick={handleDownload}>
-            <Image
-              src="/assets/images/icons/download.svg"
-              alt="Download image"
-              width={24}
-              height={24}
-              className="pb-[6px]"
-            />
-          </button>
+          <TooltipProvider>
+            <Tooltip delayDuration={200}>
+              <TooltipTrigger asChild>
+                <button className="download-btn" onClick={handleDownload}>
+                  <Image
+                    src="/assets/icons/download.svg"
+                    alt="Download image"
+                    width={24}
+                    height={24}
+                    className="pb-[6px]"
+                  />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Download image</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         )}
       </div>
 
