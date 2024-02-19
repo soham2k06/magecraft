@@ -39,7 +39,7 @@ async function Home({ searchParams }: SearchParamProps) {
         <Collection
           hasSearch
           images={images?.data}
-          totalPages={images?.totlaPage}
+          totalPages={images?.totalPage}
           page={page}
         />
       </section>
