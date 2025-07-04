@@ -137,10 +137,16 @@ export async function getAllImages({
 
     const skipAmount = (Number(page) - 1) * limit;
 
-    const images = await populateUser(Image.find(query))
-      .sort({ updatedAt: -1 })
-      .skip(skipAmount)
-      .limit(limit);
+    const searchImages = (data: any) =>
+      data.sort({ updatedAt: -1 }).skip(skipAmount).limit(limit);
+
+    const images = resourceIds.length
+      ? await searchImages(Image.find(query))
+      : await searchImages(
+          Image.find({
+            title: { $regex: searchQuery, $options: "i" },
+          })
+        );
 
     const totalImages = await Image.find(query).countDocuments();
     const savedImages = await Image.find().countDocuments();
